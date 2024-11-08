@@ -1,5 +1,5 @@
 
-## Chapter 1 Scale from Zero to Millions of users
+## Chapter 1 Scale from Zero to Millions of users a
 #### Single Server Setup
 - Chapter focuses on redundancy and scaling from a single web server to a massive stateless cluster
 - To start off with a single webserver:
