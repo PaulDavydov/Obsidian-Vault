@@ -1,0 +1,15 @@
+Why do we care about runtime efficiency?
+- cheaper hosting, sustainability (less resources needed to run it), and optimized containers/code
+- Different types of optimization:
+	- Faster startup times
+	- Warm up is done quicker, with peak performance available asap
+	- Scalability, same throughput with less resources
+	- Memory, reduced memory consumption
+- Class Data Sharing - essentially you will run a test run of your application, create a app.jsa cache, which will then be used in the future to promote faster startup and lower memory consumption.
+	- YOU WILL STOP THE TEST RUN BEFORE SPRING GETS INITIATED
+- WHAT IS RECOMMENDED TO USE:
+	- JVM with CDS recommended for better efficiency with few constraints
+	- Native with GraalVM is a great option if you can deal with long build times and compatibility challenges
+	- CraAC only used on Linux
+- Spring boot 3.3 allows for JAR files to self extract
+- 

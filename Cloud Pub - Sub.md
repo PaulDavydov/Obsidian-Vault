@@ -1,0 +1,3 @@
+- Fully managed- real time messaging service
+- Once a event is successfully published as a message, the application makes sure that all applications subscribed to that app will receive it
+- 

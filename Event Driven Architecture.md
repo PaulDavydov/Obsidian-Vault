@@ -1,0 +1,28 @@
+- Events are a first-class product in our microservice
+- Meet consumer needs, reliable, accessible and easy to use
+- Events must contain the right data
+- Might want to favor more rich and detailed events over simpler ones
+	- More detail allows for more services to leverage the data
+	- Can come back in the future to optimize for unused data
+- Data needs to be presented in a consumable format
+	- Protobuf and Avro (binary numbers) great for efficiency and bandwidth
+		- NOT HUMAN READABLE
+		- Needs tools to convert them
+	- JSON is human readable, but bulkier
+		- Makes records more easy to debug
+- Treat the data format as a contract
+- Outages can cause severe trust issues between our serivces and consumers
+- EDA alleviates some of these concerns by delivering messages regardless of the outage
+	- Messages are delivered asychnronously
+- Long outages are still an issue, so multiple back up services need to exist
+	- These take over if others fail
+	- Use K8 to keep the services running without severe disruption
+- A typical system will have the consumers listen for events, enrich the data, and create a new event for the data
+	- The events feed back to the system allowing for more enrichment opportunities
+- WIth enough messages we reach CRITICAL MASS
+- EDA is extremely decoupled
+- All services run without interference and do not rely on each other to run
+	- This is thanks to the queue
+- A Kafka topic is a logical channel that organizes and stores messages in Apache Kafka
+	- simply, they are the categories used to organize messages
+- 

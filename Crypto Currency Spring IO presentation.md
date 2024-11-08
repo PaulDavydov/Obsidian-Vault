@@ -1,0 +1,59 @@
+- Apache Kafka is a big event storing platform
+	- Stores events, not in things such as objects, but in events.
+	- Not typically put into a database, instead put into a log format.
+		- Writes down the state of the event, and stores in Topic, persistent record of events
+			- Events stored in a way that can then put on a disk/storage
+	- Microservices use kafka to communicate with each other
+		- Events happen isntantly and allow for services, that are looking at the topics where the events are stored, to react instantly
+- Low latenct on JVM
+	- Remove the DB, fully in memory, eventual sync to disk
+	- Inter machine communication. optimize process communication (IPC)
+	- Netwrk communcation
+		- UDP (User Datagram Protocol) - communcation protocol used across the Interent for especially time-sensititve transmissions such as video plahback or DNS lookup. It speeds up communcations by not formally estalishing a connection before data is transferred
+	- No containers or Kubernetes
+	- Distributed state machine
+	- Single threaded state machines
+	- app thread pinning to dedicated cores
+- What are some design principles:
+	- NO garbage collection on JVM
+	- Smart batching in the message path
+	- Lock free algos in the message path
+	- non blocking Io in the message path
+	- no exceptional cases in the path
+	- Single wrtier principle
+	- heavily prefer unshared state
+	- avoid unnecessary data copies
+	- no logging
+	- no strings
+- Everything is deterministic, meaning any message that you would put into the process, it will always come out the same, meaning you will always receive the same results
+	- If there is an error, you set up a counter and then take the message that increased the counter and run it throught the process. The error should always appear there
+- Never pass a string, too unopitmized, integers easier and faster to work with
+- Aeron is a framework used by a lot of these tech companies: [Aeron Framework guide](https://aeron.io)
+- Performance techniques for improving spring boot in. fintech
+	- use batching, fine tune size
+	- use agents
+	- resuse object pools
+	- apply backpressure
+	- smart retries
+	- use metrics/counters
+	- minimize logging
+	- fine tune your DB
+		- For use case
+		- query
+	- No JPA - Java persistence API is a framework that provides a set of specifications and interfaces for managing relational data in java apps
+		- Template is fine
+	- Control offsets
+- Fintech is a big fan of Azul Prime
+	- Includes Azul Zing, and enhanced build of OpenJDK
+		- Low consistent response latency
+		- higher totla throughput and carrying capacity
+		- faster warmip
+	- Tech delivering these results:
+		- C4 pauseless garbage collector
+		- falcon JIT compiler
+		- Ready now/Cloud Native Compiler
+	- To enable, in docker file add the `FROM azul/prime:17` to the base image, and configure the JVM parameters `args: ["-c", "java - jar -Xmx10g application.jar]`
+		- Only difference is to give it 10 gigs of heap
+	- readynow allows you to do the warmup of our program, before you do the deployment of your application
+		- 0 downtime in kubernetes
+		- 
