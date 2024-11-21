@@ -8,4 +8,4 @@
 	- BInary protocol, not a text based one
 - A good client for gRPC is gRPC UI 
 	- https://github.com/fullstorydev/grpcui
-- 
+- Can use a Acorn for cli automation
