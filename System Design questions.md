@@ -1,6 +1,4 @@
 ## Design a URL shortener
-- WATCH THIS TOMORROW PAUL PLLLZZZ
-	- https://www.youtube.com/watch?v=5V6Lam8GZo4
 ### Problem requirements
 1. Generate unqiue shortURL per longURL/paste --> How can we ensure these are unique?
 2. Per generated URL allow the original poster to see the number of clicks --> how can we ensure these are accurate
