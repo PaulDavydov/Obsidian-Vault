@@ -40,4 +40,29 @@
 	The function above will just be O(f(n)) = O(n^3)  
 
 ## Static and Dynamic Arrays
+- static array is a fixed length container containing n elements indexable from the range of 0 to n-1;
+	- Indexable means that each slot/index in the array can be referenced with a number
+- When and where to use it
+	- Storing and accessing sequential data
+	- Temporarily storing objects
+	- used by IO routines as buffers
+	- lookup tables and inverse lookup tables
+	- can be used to return multiple values from a function
+	- used in dynamic programming to cache answers to subproblems
+
+Complexity
+
+|           | Static array | Dynamic Array |
+| --------- | ------------ | ------------- |
+| Access    | O(1)         | O(1)          |
+| Search    | O(n)         | O(n)          |
+| Insertion | N/A          | O(n)          |
+| Appending | N/A          | O(1)          |
+| Deletion  | N/a          | O(n)          |
+
+- Dynamic Arrays can grow and shrink in size as needed
+- Implementing a dynamic array
+	- create a static array with an initial capactiy
+	- Add elements to the underlying static array, keeping track of the number of elements
+	- If adding another element will exceed the capacity, then create a new static array with twice the capacity and copy the original elements into it
 - 
