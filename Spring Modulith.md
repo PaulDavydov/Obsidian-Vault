@@ -1,2 +1,0 @@
-- Modulith: archeticural guidance on how to structure your code in single codebase or service
-- 

@@ -118,3 +118,100 @@ Client - > CDN -> S3 - > DB
 
 ![[Pasted image 20241209212001.png]]
 use apache zookeeper as a centralized service for maintaining configuration information, naming, providing distributed synchro, and providing gorup services
+
+
+
+## Reddit/Twitter/Facebook/Insta
+### Objectives:
+1. Users can quickly see who they are following and who follows them
+2. We can quickly load all posts for a given user
+3. Low latency news feed from posts that a user follows
+4. Posts can have configurable privacy types, as do follows
+5. user can comment on posts, and comments can be infinitely nested
+### Capacity Estimates
+1. 100 characters a post, around 100 bytes for text, maybe around 100 for other metadata
+2. 1 billion pots per day -> 1 billion 200 bytes * 365 days/year = 73 TB/year
+3. On average users have 100 followers some "verified" users have millions
+4. Comments also have 100 characters, so around 200 bytes with metadata
+5. Most comments on one post = 1 million, 1million x 200 bytes = 200 MB
+### Fetching Followers/following
+- getFollowers(userId)/getFollowing(userId) -> we want the queries to return quickly
+	- if we chose one, the other will become super slow
+- instead of having one table, have two, one for followers and one for following
+- There will be a lot of writes to theses tables, so at least the user-following table needs to be able to ingest them quicklky! 
+	- CASSANDRA BEST DB
+		- No SQL DB, can write to any replica, LSM tree fast for ingestion
+	- Do not need to worry about write conflicts, every write is valid!
+- Partitioning
+	- userId -> partition key, allows us to ensure no cross partition query to get following
+	- follower/followingId -> sort key, quick scanning if we ever need to delete a row
+### News Feed (Naive)
+- client
+	- hit user following table
+		- hit post db sharded by userId
+			- aggregate all data on one server
+- SLOW
+### New Feed (Optimal)
+- how do we avoid reading from multiple different places?
+	- Would somehow need to index tweets by what new feed they belong to
+	- But a tweet can be in around 100 different news feeds
+	- 1 billion tweets/day x 200 bytes/tweet x 100 copies = 20tb of tweets per day
+	- 20 TB/ 256gb beefy hosts as caches = 80 in memory caches
+	- this is doable
+### Posts DB
+-  DB writes need to be fast since all posts go there first!
+- Utilizing some database with lots of partitioning + leaderless replication + LSM tree could help us here! (Cassandra AGAIN)
+TYPICAL SCHEME
+
+| userId (partitioning key) | timestamp (sort key) | twee body   |
+| ------------------------- | -------------------- | ----------- |
+| 69                        | 01/06/2020           | ........... |
+- Partitioning/sorting this way also ensures that loading all tweets for a given user is fast!
+### Popular Users
+- Some users will have millions of followers, our prev step wont work
+	- Too many following to stream to flink
+	- too many caches to update per post
+	- can we use a hybrid approach?
+### Caching popular posts
+- we can introduce a caching layer for posts of popular users to speed up fetching them!
+- Since we know in advance that these posts will be popular,  we can use a "push" based approach to preload the data!
+### Security levels on Posts
+- lets say a user can specify whether a post is for "all" followers or "close friend" followers.
+	- Put the info in the followers table
+
+USER-FOLLOWERS table:
+
+
+| User | follower | security level |
+| ---- | -------- | -------------- |
+| 1    | 2        | all            |
+| 1    | 3        | close friend   |
+- changes to post security/follower security level will flow through our posting pipeline  and eventually flow to the news feed caches
+	- UNFORTUNATELY expensive and asynchronous
+### Nested Comments
+- we want to be able to optimize our setup to quickly read nested commments
+- Shard by postId
+-  Multileader may not here, let's use MySQL
+- BFS or DFS up to you
+### Graph DB
+- Allows us to have a generalized query approach for traversing comments
+- Could use a native graph DB like Neo4J
+	- Users pointers on disk
+### Alternatives to Graph DB
+- graph DBs are still going to have somewhat high latency, jumpinbg around on disk is very slow so we shoudl try to avoid it when we can!
+- can we do something smart with traditional DBs to make a better index?
+- Build DFS index
+
+![[Pasted image 20241222202538.png]]
+
+
+### B Trees
+- B trees are a type of Database index
+	- Kept entirely on disk
+- Every Node of the B tree has a set size
+- Split nodes as we traverse to help keep the tree balanced
+- have a write ahead log to keep everything up to date on your db
+- Summary:
+	- Self balancing tree on disk
+	- No limits to dataset size
+	- support for range queries
