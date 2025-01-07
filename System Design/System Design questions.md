@@ -267,3 +267,10 @@ user server ------> cache 1 <--------- pricing gme server
 
 
 
+
+
+- list of words
+- build a map to jump to these words
+- graph
+
+
