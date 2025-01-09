@@ -13,6 +13,8 @@
 	- What am i expected to be working with on my first story.
 1. What is the onboarding process? Am i expected to pick up work immediately and figure things out for myself, or is there training I would go throug, or some kind of peer programming?
 2. Would i be expected to collaborate with other for stories, or work solo on them?
+3. How much influence do engineers have over features/tasks? % of tasks driven by Engineering team?
+4. “What do you find the most challenging or frustrating working at at Qualtrics?”
 
 
 - why are you looking for a new job/position?
