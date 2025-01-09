@@ -45,27 +45,56 @@
 ## Object-Oriented Programming
 
 - 1. What are the Object Oriented Features supported by Java?
+	- One feature is abstraction. Essentially it is a method to break down complicated classes into manageable chunks. It also provides a method of hiding the implementation details of a class or method from the outside world.
+	- Encapsulations, lets us resuse funcionality without jeopardizing our security. it essenitally binds data variables and methods together in a class. Only objects of the class, can access these entities. Also known as data hiding and helps with the insulation of data
+	- Inheritance, process by which one class inherits the fucntions and properties of another class. Essentially subclasses can define their own features, and derive the res from the parent class.
+	- Polymorphism, essentially allows for assigning and performing several actions using a signle fucntion
+	- Objects and classes, the basic units of OOP.
 - 2. What are the different access specifiers used in Java?
+	- public, private, default, protected
 - 3. What is the difference between composition and inheritance?
+	- can be explained by what the relationship is
+		- Inheritance "IS A" relationship while composition "HAS A" relation ship. typically composition is used when having another class be declared in the field variables of your current class. Inheritance lets us inherit certain methods and fields from a parent class, telling us that the current class is based off of the other class.
 - 4. What is the purpose of an abstract class?
+	- Abstract class can be used as a type of template for other classes. The class will hold common functionality for all classes that extend it. Essentially it is a class that cannot be instantiated, but it can be implemented by other classes that will use methods from it or overried them
 - 5. What are the differences between constructor and method of a class in Java?
+	- Constructor intiates the Object, based on a predetermined usage of fields. methods in the class essentially let us know what the class can or will do.
 - 6. What is the diamond problem in Java and how is it solved?
+	- it is essentially an issue where a child class inherits from multiple parent classes, and those parent classes have the saem methods with the same parameters. Java solves this issue using interfaces. These interfaces contain all the methods by default as abstract and we can provide the logic needed for that method, in the child class.
 - 7. What is the difference between local and instance variables in Java?
-8. What is a Marker interface in Java?
+	- Instance variables are declared within the class but outside of a method, constructor, or code block, and will always have a default value. They are created with the object and destroyed alongside it
+	- Local variables are created within the method but do not get a default value. They are destroyed after the scope of the method is completed or exited out of.
+- 8. What is a Marker interface in Java?
+	- A marker interace is an interface that does not have any methods or constants inside of it. They are usually seen as issues since they do not define any behaviors within the interface
 
 ## Data Structures and Algorithms
 
 - 1. Why are strings immutable in Java?
+	- Strings are stored in a pool to save memory. The immutability ensures that one reference does not change the value for others pointing to the same string. Strings are used for sensitive data like usernames and passwords. The immutability prevents attackers from altering the values. Thread safety, since they cannot be changed they are auto thread safe, meaning multiple threads can use the same string. Performance wise, JVM resuses the strings in the string pool.
 - 2. What is the difference between creating a String using new() and as a literal?
+	- when using a string literal, we are doing something called string interning, meaning the references point to a similar location in memory. On the other hand, creating a new string object, essentially creates a unique string that is not referenced in the same memory.
 - 3. What is the Collections framework?
+	- it is a gourp of objects presented as a single unit. essentially any class or interface that implements some kind of collecting ds, it is apart of this fraemwork
 - 4. What is the difference between ArrayList and LinkedList?
+	- While both implement the list interface.
+		- Arraylist is a dynamic array, that stores elements. Accessing an index it fast but insertion/deletion is rather slow
+		- Linkedlist uses a doubly linked list to store elemetnts. elements contain a reference to the previous and next elements. Slower for random access, since the list must be traversed, but insertion and deletion is quick.
 - 5. What is the difference between a HashMap and a TreeMap?
+	- Both implement the map interface
+		- Hashmap uses a hash table to store key-value pairs. It does not have a specific order of elements, but access time for elements is quiuck.
+		- Tree map is a red-black tree BST to store key-value pairs. it maintains elements in a sorted order based on their keys, but its access time is much slower.
 - 6. What is the difference between a HashSet and a TreeSet?
+	- Both implement the set interface, which means they only store unique elements, no duplicates
+		- Hashset is backed by the hashtable. Elements are not particularly ordered and offers constant time performance for basic operations like add, remove, and contains. Also allows null elements
+		- TreeSet is backed the a red and black tree (BST). Elements are stored in teheir natural sorted order. Performance wise it offers logarithmic time performance for basic operations. But it does not allow null values
 - 7. What is the difference between an Iterator and a ListIterator?
-- 8. What is the difference between an ArrayList and a LinkedList?
+	- Both are interfaces used to traverse colelctions.
+		- Iterator traverses in the forward direction only.
+		- Listiterator can traverse back or forward.
 - 9. What is the purpose of the Comparable interface?
-- 10. What is the difference between a HashSet and a TreeSet?
+	- it is used to define the natural ordering of objects for a user-defined calss.
 - 11. What is the purpose of the java.util.concurrent package?
+	- It covers concurrency, multithreading, and parallelism on the java platform.
 
 # Exception Handling
 
@@ -96,3 +125,6 @@
 - 11.What is the purpose of the sleep() method in Java?
 - 12.What is the difference between wait() and sleep() in Java?
 - 13.What is the difference between notify() and notifyAll() in Java?
+
+a bean is the backbone of waht spring is. Essentially it contains a recipe for creating an actual instance of a class. It helps with dependency injectsion. Maintined by the IoC container
+IoC container is the dependency injection, it essentially jelps objects define their dependencies, that is, the other objects they work with.  The container then injects the dependencies whenever the bean is created.
