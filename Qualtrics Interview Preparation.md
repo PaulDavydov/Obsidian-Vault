@@ -41,3 +41,13 @@ We are a diverse, equitable and inclusive team. We are stronger together and val
 What do we mean when we say **SCRAPPY**?
 
 We innovate and write our own story, regardless of the status quo. We have grit and passion, and see obstacles as opportunities for creativity.
+
+
+
+- engeinerring bootcamp
+	- build end to end project
+	- once done you are basically trained
+- after its a the teams specific onboarding process
+- projects are usually can be solo but bigger projects can be done solo
+
+aws
