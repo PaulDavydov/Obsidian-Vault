@@ -274,3 +274,117 @@ user server ------> cache 1 <--------- pricing gme server
 - graph
 
 
+
+
+## Design a Web crawler
+### Problem requirements
+- Scrape all content currently accessible via the web
+- Store (and possible index) all contents
+- respect website crawling policies (robot.txt files)
+- complete this process within one week
+### Capacity Estimates
+- around 1 billion web pages
+- around 1 mb to store the contents of a web page
+- therefore we need to make 1 billion requests, store 1 PB
+- 1 week -> 600k quets, 1bil/600k sec = 1500 requests per seconsd
+- maybe requires 500 threads so around 100 servers?
+### Process Overview
+- pull in URL from our "to-crawl"list
+- check if we have already crawled it
+- check if crawling it is compliant with its hosts robots.txt file
+- get the ip address of the host via DNS
+- make an http request to load the contents of the site
+- check if we have laready process a different URL with identical content
+- parse the content
+- store the results somwhere
+- add any referenced URLs to our "to-crawl" list
+### fetching URLS to crawl
+- can we reduce networking calls on the frontier
+	- we could kep each nodes URLS completely locally
+### local fronteir evaluation
+- while the localfornteir allows us to avoid an extra network call as opposed to ahving a centralized frontier, it has a major downsides!
+	- no load balacning
+	- we can process duplicate links
+- we would require an extra network call to a centralized service in order to check whether we have already processed a URL!
+### Distributed frontier
+- to make sure that each node gets an equal amount of work, we can send URLS from one node to another
+	- USE LOAD BALANCER: round robin etc
+### Avoiding duplicate fetches
+- we wnat to avoid fetching and storing the same website twice!
+- one solution: database that stores fetched URLS
+	- this requires an extra network call to read from!
+- recall: we already are sending URLS from tnode to node in order to load balance
+	- what if we did this smarter than round robin?
+### Avoid duplicate fetching, optimized
+- Idea: route URLS x and y to the sam node if x = = y
+	- we can just parition our nodes by hash range of URL
+	- this would keep load per node balanced
+### Avoid duplicate content on different sites
+- can we do something smart here to avoid extra network calls to stop ourselves form processing dupllicate HTML?
+	- we have to actually fetch the content first (expensive)
+	- we can then hash it
+	- since we dont know what these hashes are before fetching the URLs, theres no way to pre organize the URLS onto the same node based on its content
+### Content Hash Checking
+- since diplciate hashes can show up on any node, we need some sort of centralized set of hashes!
+	- 64 bit hash, 1 billion sites, up to 8 gb to store these
+	- 8gb is pretty low (if we have beefy servers), could keep in memory!
+- Option 1: centralized redis set of hashes
+	- if we always read from and write to the leader
+	- we can maintain strong consistency!
+### Content hash low latency
+- what if our nodes are in multiple data centers?
+	- havint to read from and write to redis could be slow!
+- Idea: set CRDT on each node, perform anti-entropy in background
+	- No extra networkl calls on critical path!
+- Issue: we may now process the same content multiple times!
+	- is this operation tolerable/idempotent?
+### Domain name service
+- provides us a mapping from host name to IP address!
+	- likely too large to cache whole mapping on jsut one node
+	- requires a networking call
+	- recall just one IP address per host
+- Previously we said we would parition our URLs by has range of URL.
+- what if instead, we paritiioned them by hash range of host?
+	- now we can maintain an LRU cache of DNS results!
+	- facebook.com/a, facebook.com/b, facebook/c on the same node
+### Robots.txt
+- tells whether we can crawl a certain host and if so how frequently!
+- recall: we are already partitioning our nodes by host name
+	- this means that we can also keep a local cache of crawling policy!
+- Example 1: "do not crawl twitter"
+	- ignore URL and get next one from frontier
+- Example 2: "you can only crawl twitter once per minute"
+	- keep table with last time you crawled each host
+	- put message back on your own frontier and take next one (no network call)
+### Fetching the URL
+- is there anything we can do to speed this up?
+	- what if we somehow paritioned our ndoes to have similar geographic location to the URLs they fetch?
+- probably not possible, domain doesn't indicate where URL is hosted
+	- we probably need to just eat the cost and fetch the URL
+### Storing results
+- how can we keep our writing latency minimal?
+	- ideally want data locality?
+- could run our nodes in Hadoop cluster and export to HDFS
+- if using S3 could try to put our nodes in the same data center
+	- probably cheaper
+### pushing to the frontier
+- we now have a bunch of URLs to push!
+	- how should we model our frontier?
+- What data structure should we use?
+	- stacj (depth first search)
+		- not really feasible many processes writing to the stack, whats the top?
+	- queue (breadth first search)
+		- we can do this! (think message queues)
+	- priortiy queue?
+		- may be harder to implement, but if we prefer certain websites
+### Architectural choices
+- we want reliability, we dont want to skip any websites!
+	- would be great if we dont ahve to build our own paritioning solution!
+- Frontier -> Kafka
+	- loss based broker
+- Processing Nodes -> Flink
+- we get: full replayability, no lost messages, paritioning
+	- all writies to S3 can be idempotent, can use internal state for caching!
+![[Pasted image 20250119014151.png]]
+
+## Next
