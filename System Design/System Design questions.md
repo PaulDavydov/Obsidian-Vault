@@ -387,4 +387,82 @@ user server ------> cache 1 <--------- pricing gme server
 	- all writies to S3 can be idempotent, can use internal state for caching!
 ![[Pasted image 20250119014151.png]]
 
-## Next
+## Ticketmaster
+### Functional Requirements
+- users should view events on the app
+- users should be able to search for events on the app
+- users should be able to book tickets to events using the app
+- users to view their booked events/tickets
+- admins or event planners need to be able to add events
+- dynamic pricing for popular events
+
+### Non-Functional Requirements
+- system should prioritze avalability for searching and viewing events, but should prioritize consistency for booking events (no double booking)
+- the system should be scalable and able to handle high throughput in the form of popular evetns (10 million users, one event)
+- system should have low latency search (<500 ms)
+- system is read heavy, this needs to be able to support high read throughput (100:1)
+### Core Entities
+1. Event - entity stores essential info about an event, details like the date, desc, type, and the performer/team invovled. Essentially our most important information
+2. User - the individual accessing/interacting with the system
+3. Performer - the individual or group member participating in the event. Key attributes for this entity are performers name, descr, potenial links to their work/profile
+4. Venue - represents the physical location on where the event might be, key details are : address, capacity, and a specific seat map, providing a layout of seating arrangements unique to the venue
+5. Ticket - contains info related to individual tickets for events. key details are associated event ID, seat details, pricing, and status
+6. Booking - records the details of a user's ticket purchase, includes the user ID, a list of ticket IDs being booked, total price, and booking status. Key in managing the transaction aspect of the ticket purchasing process.
+
+- KEY ENTITIES:
+	- Events
+	- Users
+	- Venues
+	- Performers
+	- Tickets
+	- Bookings
+### High Level Design
+- Users should be able to view events
+	- when users navigate to the app/event they should see details about that event, this should include the seat mapping, event name, with description, event dates, and facts about the performers
+- Event Service is our first service that we add
+	- It will include a website or app UI that allows users to interact with the service
+	- API Gateway that serves as an entry point for clients to access the different, microservices of the system. Will route our requests (AKA LOAD BALANCER) and will handle our authentication, rate limiting, and logging
+	- Event Service, responsible for handling view API requets by fetching necessary event, venue, and performer info from the db and returning the results to the client
+	- Events DB stores tables for events, performers, and venues
+- Users should be able to search for events
+	- Client makes a request with the search parameters
+	- Our load balancer accepts the request and routes it to the API gateway with the fewest current connections
+	- API Gateway after handling basic authentication and rate limiting, forward the request onto our Search Service
+	- The search service queries the Events DB for the events matching the search parameters and returns them to the client
+- User should be able to book tickets to events
+	- Main thing is to avoid users from paying for the same ticket
+	- We should use MySQL DB that has ACID properties
+		- Atomicity - transaction is treated as a single unit of work
+		- Consistency - bring the database from one valid state to another
+		- Isolation - multiple transactions can execute concurrently without interfering with each other
+		- Durability - changes to data made by successfully executed transactions are saved, even if the system fails
+	- New tables in Events DB
+		- Create tables called Bookings and Tickets. The booking table will store the details of each booking, including user ID, tickets ID, total prices, and booking status. Tickets table will store the details of each ticket, including the event ID, seat details, pricing, and status. The Tickets table will also have a bookingId column that links it to the Bookings table
+	- Booking Service - 
+		- Service responsible for the core functionality of the ticket booking process. interacts with db that store data on bookings and tickets
+			- interface with the Payment processor (stripe) for transactions. Once payment is confirmed, the booking service updates the ticket status to "sold"
+			- communicates with the Bookings and Tickets tables to fetch, update or store relevant data
+	- Payment Processor (stripe):
+		- external service for handling payment transactions.
+- How things will work:
+	1. User is redirected to a booking page, where they provide payment detials and cofirm booking
+	2. Upon confirmation a POST request is sent to the /bookings endpoint with the selected ticket IDs
+	3. booking server initiates a transactions
+		1. check availability of the selected tickets
+		2. update the status of the selected tickets to 'booked'
+		3. create a new booking record in the bookings table
+	4. if transactions is successful, the booking server returns a success response to the client. Otherwise, if the transaction failed because another user booked the ticket in the meantime, the server returns a failure response and we pass this info back to the client
+### How to improve the DB design
+- Improve the booking service
+	- When user is booking a ticket, they may select the ticket and add it to their shopping cart. The ticket will contain the seat based on the mapping. Redis will hold that booking for a timer based caching system, can also be a least recently used but a 10 min timer is just as good. Redis is a good caching layer. Booking service will write to the Booking DB saying, status is IN PROGRESS. We will then route the user to a payment page. If user stops here after 10 min the lock will auto release and the ticket becomes available again. We send the payment processor the bookingId so it becomes associated with the db. Once the payment is complete, we update the ticket and booking table using the bookingId to say that the seat and ticket has been sold/confirmed
+- API scaled to support 10s of millions of concurrent requests during popular events
+	- use caches to store quick access to data. Utilize Redis as our in-memory data stores. makes sure to implement a TIME TO LIVE policy for cache entries, ensuring periodic refreshes within the cache data. Can prioritizes based on the type of data
+- Ensure a good user experience for high-demand events
+	- When a user wants to attend a popular event, user request view the booking page, tehy are placed into a virtual queue. Websocket connection is established with their client and add the user to the queue using their unique WebSocket connection
+	- dequeue users from the front of the queue, notify users that they can purhcase tickets
+	- update db to reflect that this user is now allowed to access the ticket purchasing system
+- Improve search to ensure we meet our low latency requirements
+	- Can use a full text search engine like elasticsearch
+	- simpler for me to describe a full text indexes in the db. Index based on artist/performer/group name
+- Speed up frequently repeated search queries and reduce load on our search infrastructure
+![[a4bb6b51380304a1e72948f2f21dba30.png]]
