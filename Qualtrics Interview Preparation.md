@@ -50,4 +50,5 @@ We innovate and write our own story, regardless of the status quo. We have grit 
 - after its a the teams specific onboarding process
 - projects are usually can be solo but bigger projects can be done solo
 
-aws
+- No technical role 
+- coding interview, might be leetcode
