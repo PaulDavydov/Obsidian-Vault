@@ -1,0 +1,9 @@
+- Making sure a single piece of code actually works correctly
+- call it using from a dependecny tool that you might be using, Maven Gradle
+- A unit test is just a method with the @Test annotation
+- Make sure the unit test just tests for a single scenario
+- Inside the test method, we want to call the object being tested
+	- test the method located iwthin the object to be sure that the thing is working
+	- assert that the method call equals what we expect
+- every unit test we right will have a few assert statements within it
+- 
