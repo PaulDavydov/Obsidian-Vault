@@ -1,0 +1,5 @@
+- for the genre-topn query, we do a left join lateral
+	- implements a nested loop over the genres and allows to fetch our top n. tracks per genre
+- the correlated subq runs for each genre and is parameterized with the current genreid thanks to the clause where track.genreid = genre.genreid.
+	- this is how the where clause implements the correlation between the outer loop and the inner loops
+- once the inner loop is done, the lateral subq named ss we join again with the album and artist tables
