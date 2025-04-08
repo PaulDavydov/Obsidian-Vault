@@ -1,0 +1,4 @@
+- seek opportunities to work with other people - strongly agree
+- think of many possible solutions for work storngly agree
+- i am resilient in unexpected istuations strongly agree
+- good and ethical person strongly agree
