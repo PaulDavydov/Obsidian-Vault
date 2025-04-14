@@ -59,6 +59,8 @@
 	- Database replication: databases are replicated across multiple data center for high availability and disaster recovery
 	- Containerization: docker containers for microservices and kubernetes for orchestrtation for auto scaling and easier deployment
 
+Distributed transactions are ==a series of related database operations that occur across multiple independent systems or databases, ensuring that all or none of the operations are committed==
+
 DISTRIBUTED Transactions: EITHER WE ALL PASS OR WE FAIL, single unit of work
 ACID:
 - Atomic: All operations in the transaction are treated as a single unit
