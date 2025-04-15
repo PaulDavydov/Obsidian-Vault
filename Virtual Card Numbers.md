@@ -1,0 +1,11 @@
+- They are unique numbers from your credit card issuer that are linked to your credit card account
+- Allow for shopping online without giving your actual card number
+	- Basically adds a extra layer of security for protection against fraud
+	- Can be easily changed and have a new one ready to go instantly in case of fraud or it getting stolen
+	- Allows to set up spending limits and maybe even a timer for when purchase can happen, allowing customers to regulate their own spending
+	- Protection against subscriptions that customers may not realize they have
+	- If an existing customer, instead of having to wait for the credit card to come in, they can be issue a VCN and have that working immediately for purchases
+- Issues that can be experienced
+	- If a customer returns a product they bought, if the VCN has been changed, it can cause issues with the refund
+	- If multiple reaccuring payments are done on the VCN, might not be so easy to remove/change due to it being currently in use
+	- Some merchants may not have the correct payment hardware necessary for this technology, case in point, contact less payment and payments via Google and Apple Pay

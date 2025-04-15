@@ -6,7 +6,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 class Bank {
-
+	// use final so that we ensure the behavior of the class cannot be chagnged
+	// also so child classes are not created from it
+	// basically for secuirty, consistency, and to make it immutable
     private static final class Account {
         private Long balance;
         private final Lock lock = new ReentrantLock(true);
@@ -57,6 +59,10 @@ class Bank {
 	            lock.unlock();
 	        }
 	    }
+
+		public int getBalance() {
+			return this.balance;
+		}
     }
 
     private final Map<Integer, Account> accounts = new ConcurrentHashMap<>();
@@ -99,7 +105,7 @@ class Bank {
             acc1.lock.unlock();
         }
 
-        return true;
+        return acc1.getBalance();
     }
 
     public boolean deposit(int account, long money) {
