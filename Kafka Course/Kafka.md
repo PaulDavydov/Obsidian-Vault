@@ -1,0 +1,21 @@
+- Conduktor, makes apache kafka accessible to everyone
+- Kafka allows for data stream decoupling
+	- Source systems publish data into kafka
+	- Target systems will subscribe to the data being pushed in
+- Kafka was created by LinkedIn, now Open-Source Project
+- Distributed, resilient, fault tolerant
+- Horizaontal scalability
+	- Can scale to 100s of brokers
+	- Can scale to millions of messages per second
+- High performance (latency of less than 10ms) real time
+- Use by 2000+ firms, 80% of fortune 100
+- Use cases
+	- Messaging system
+	- Activity tracking
+	- gather metrics from many different loations
+	- application logs gathering
+	- stream processing
+	- decouple of system dependencies
+	- integration with big data tech, such as spark, flink
+	- Micro-services pub/sub
+- 
