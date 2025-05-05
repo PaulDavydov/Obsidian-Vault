@@ -17,6 +17,26 @@
 - Order is guaranteed only within a partition (not across partitions)
 - Data is assigned randomly to a partition unless a key is provided
 - you can have as many partitions per topic as you want
+- Partitions rebalance automatically in Kafka,
+	- Happens whenever a consumer joins or leaves a group
+	- Also happens when a partition is added into a topic
+- Eager Rebalance
+	- Default algo
+	- When new consumer joins the group, all consumers stop, and give up their ownership/membership of the partitions
+	- Consumers rejoin the group, and all partitions are assigned to the consumers
+		- This will be random
+	- Consumers don't necessarily "get back" the same partitions as they used to
+- Cooperative Rebalance (Incremental Rebalance)
+	- Reassigning a small subset of the partitions from one consumer to another
+	- Other consumers that don't have reassigned partitions can still process uninterrupted
+	- Can go through several iterations to find a "stable" assignment (hence "incremental")
+	- Avoids "stop-the-world" events where all consumers stop processing data
+	- Kafka Consumer, exists a property called `partition.assignment.strategy` 
+		- RangeAssignor: assign partitions on a per-topic basis (can lead to imbalance)
+		- RoundRobin: assign partitions across all topics in round-robin fashion, optimal balance
+		- StickyAssignor: balanced like RoundRobin, then minimises partition movements when consumer join/leave the group in order to minimize movements
+		- CooperativeStickyAssignor: rebalance strategy is identical to StickyAssignor but supports cooperative rebalances and therefore consumers can keep on consuming from the topic
+		- The default assignor is RangeAssignor, CooperativeStickyAssignor which will use the RangeAssignor by default, but allows upgrading to the CooperativeStickyAssignor with just a single rolling bounce that removes the RangeAssignor from the list
 ### Producers
 - producers write data to topics (which are made of partitions)
 - producers know to which partition to write to (and which kafka broker has it)
@@ -137,4 +157,10 @@ Typical kafka message anatomy
 	- single process to start with kafka
 	- faster controller shutdown and recover time
 - Kafka 3.x now implements the raft protocol to replace zookeeper
-- 
+
+### Sticky Paritioner
+- default, kafka sends messages to topics using a round robin algo.
+	- No realy order, can be very random
+- When sending messages in batch, uses sticky partitioner algo
+	- Sends all the messages in the batch, to the same partition
+	- or if all messages are sent real fast, for performance improvements, will send to the same partitioner
