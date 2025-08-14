@@ -27,4 +27,17 @@
 	- the quantum state of qubit or a collection of qubits
 	- analogous to the classical gates used in everday computers: AND, OR, NOT
 	- basic building blocks of quantum computation
-	- 
+### Quantum NOT gate
+- Generalization of the classical NOT gate
+- What happens when we apply the NOT gate to a general superposition state?
+	- It acts linearly on the quantum state, interchanging the 0> and the 1>
+- Notation for the NOT gate is the *X*
+### Quantum wires
+- Simplest possible quantum circuit is the quantum wire
+- The circuit is a single qubit being preserved in time
+- In a simple circuit, if a arbitrary quantum state is input into the circuit, then the exact same state is the ouput
+- Quantum states are incredibly fragile and due to that the quantum circuit is hard to implement
+- Nuetrinos make very good quantum wires since it interacts weakly with other matter
+- If you want to store the quantum state, make sure the qubits only interacts very weakly with other systems
+	- the dilemna is if qubits interact weakly with other systems, it makes it harder to manipulate qubits
+- 

@@ -1,0 +1,27 @@
+- what is an agent?
+	- AI Model capable of reasoning, planning, and interacting with its environment
+	- We call it agent because it has agenecy, ability to interacty with the environment
+	- A more formal definition: a system that leverages an AI model to interact with its environment in order to achieve a user-defined objective. It combines reasoning, planning, and the execution of actions (often via external tools) to fulfill tasks
+- Agents have two main parts
+	- The Brain(AI Model):
+		- Where all the thinking happens. AI Model handles reasoning and planning. It decides which Actions to take based on the situation
+	- The Body(Capabilities and Tools):
+		- Part represents everything the Agent is equipped to do
+- Scope of possible actions a agent can take, is dependent on what the agent has been equipped with
+- Most common AI model found in agents is an LLM (Large Language Model)
+	- Takes text as input and outputs text as well
+	- EX: GPT4, OpenAI, LLama, Gemini, etc
+		- These models are trained on a vast amount of text and are able to generalize well
+- Another example is the VLM (Visual Lanuage Model)
+	- Similar to LLM but also understands images as input
+- How do LLM, that output only text, generate images?
+	- ChatGPT and HuggingChat implement additional functionality (called Tools), that the LLM can use to create images
+- An agent can perform any task we implement via tools to complete Actions
+	- If we wanted it to write and send an email, we can give it some code to sned emails
+	- the design of the tools is important and has a great impact on the quality of your agent
+- Summary:
+	- Ai Agents use the core reasoning engine to:
+		- Understand natural language: interpret and respond to human instructions in a meaningful way
+		- Reason and plan: analyze info, make decisions, and devise strategies to solve problems
+		- Interact with its environment: gather info, take actions, and observe the results of those actions
+- 
