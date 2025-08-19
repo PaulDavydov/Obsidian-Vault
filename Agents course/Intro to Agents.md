@@ -88,3 +88,57 @@ Most well-known LLMs
 	- Cloud/API (e.g. Hugging Face Serverless inference API)
 - LLMs are a key component of AI Agents, providing the foundation for understanding and generating human language
 	- Interpret user instructions, maintain context in conversations, define a plan and decide which tools to use
+### Messages and Special Tokens
+- behind the scenes, prompts are considered a sequence of tokens, but with systems like chatgpt or huggingchat, these are exchanging messages.
+	- messages are concatenated and formatted into a prompt that the model can understand
+- chat templates act as the bridge between conversational mesages (user and assistant turns) and the specific formatting requirements fo your chosen LLM
+	- templates structure the communication between the user and the agent
+- Special tokens help delimit where the user and assistant turns start and end
+- System message: also known as System Prompts, define how the model should behave
+	- Serve as persistent instructions
+- System Message also gives info about the available tools, provides instructions to the model on how to format the actions to take, and includes the guidelines on how the though process should be segmented
+- Converstations consists of alternating messages between a Human (user) and an LLM (assistant).
+- Chat templates are essential for structuring conversations between language models and users
+	- they guide how messages exchanges are formatted into a single prompt
+- Base Model is trained on raw text data to predict the next token
+- Instruct Model is fine tuned specifically to follow instructions and engage in converstations
+	- SmolLm2-135M is a base model while SmolLM2-135M-Instruct is its instruction-tuned variant
+- Base Model act like an instruct mdoel, we need to format our prompts in a consistent way that the model can understand, chat templates help with this
+- Each instruct model uses different conversation formats and special tokens, chat templates are implemented to ensure that we correctly format the prompt the way each model expects
+- transformers - chat templates include Jinga2 code, that describes how to transform the ChatML list of JSON messages, as presented in the above examples, into a textual representation of the system-level instructions, user messages and assistant responses that the model can understand
+	- help maintain consistency across interactions and ensures the model responds appropriately to different types of inputs
+Simplified version of the SmolLM2-135M-Instruct chat template
+```
+{% for message in messages %}
+{% if loop.first and messages[0]['role'] != 'system' %}
+<|im_start|>system
+You are a helpful AI assistant named SmolLM, trained by Hugging Face
+<|im_end|>
+{% endif %}
+<|im_start|>{{ message['role'] }}
+{{ message['content'] }}<|im_end|>
+{% endfor %}
+```
+Using these messages:
+```
+messages = [
+    {"role": "system", "content": "You are a helpful assistant focused on technical topics."},
+    {"role": "user", "content": "Can you explain what a chat template is?"},
+    {"role": "assistant", "content": "A chat template structures conversations between users and AI models..."},
+    {"role": "user", "content": "How do I use it ?"},
+]
+```
+Result combing both:
+```
+<|im_start|>system
+You are a helpful assistant focused on technical topics.<|im_end|>
+<|im_start|>user
+Can you explain what a chat template is?<|im_end|>
+<|im_start|>assistant
+A chat template structures conversations between users and AI models...<|im_end|>
+<|im_start|>user
+How do I use it ?<|im_end|>
+```
+- Transformer library will take care of chat templates for you as part of the tokenization process
+
+### What are tools?
