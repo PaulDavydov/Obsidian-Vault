@@ -142,3 +142,42 @@ How do I use it ?<|im_end|>
 - Transformer library will take care of chat templates for you as part of the tokenization process
 
 ### What are tools?
+- Crucial aspect of AI agents, is their ability to take actions through the usage of tools
+- Tool is a function given to the LLM
+	- Needs to fulfill a clear objective
+- Some tools for AI agents
+	- Web Search: Allows the agent to fetch up-to-date info from the internet
+	- Image gen: Creates images based on text descriptions
+	- Retrieval: retrieves info from an external source
+	- API Interface: Interacts with an external API (Github, Youtube, Spotify, etc)
+- LLM predicts the completion of a prompt baed on their training data, which means that their internal knowledge only includes events prior to their training
+	- Using a tool we can provide our LLM up-to-date data
+	- Without a tool, an LLM could hallucinate random data/info
+- Tool should contain:
+	- textual description of what the function does
+	- a callable (somthing to perform an action)
+	- Arguments with typings
+	- (Optional) Output with typings
+- LLM needs to be taught that te tool exists and can be called
+- But teh Agent is the one that actually executes the tool
+- To give LLMs tools, we need to use the system prompt to provide textual descriptions of available tools to the model
+	- We must be prices and accurate about what the tool does and what exact inputs it expects
+	- Tool descriptions are usually provided using expressive but precise structure, such as computer languages or JSON
+- Creating a tool
+	- A descriptive name of what it does (ex: calculator)
+	- A longer description, provided by the function's docstring comment: Multiply two integers
+	- The inputs and their type: the function clearly expects two ints
+	- the type of the output
+- Programming languages are ideal since they are expressive, concise, and precise
+### Understanding AI Agents through the Thought-Action-Observation Cycle
+- Agent work is a continuous cycle of thinking (Thought) -> acting (Act) - > observing (Observe)
+	- Thought: LLM part of the agent decides what the next step should be
+	- Action: The agent takes an action by calling the tools with the associated arguments
+	- Observation: the model reflects on the response from the tool
+- The three components work together in a continuous loop
+- In many agent frameworks, the rules and guidelines are embedded directly into the system prompt
+- System message
+	- Agent's behavior
+	- Tools our agent has access to
+	- Thought-Action-Observation-Cycle
+- 
