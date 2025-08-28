@@ -1,0 +1,2 @@
+GPU: Gigabyte GAMING OC GeForce RTX 5080 16 GB
+CPU: 

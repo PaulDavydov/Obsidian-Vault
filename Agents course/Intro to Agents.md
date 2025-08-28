@@ -180,4 +180,17 @@ How do I use it ?<|im_end|>
 	- Agent's behavior
 	- Tools our agent has access to
 	- Thought-Action-Observation-Cycle
+### Though: Internal Reasoning and the ReAct Approach
+- Thoughts represent the Agent's internal reasoning and planning processes to solve the task
+	- Can be viewed as using the LLM to inner monologue through the problem
+- Chain of Thought (COT) is a prompting technique that guides a model to think through a problem step-by-step before producing a final answer
+	- usually starts with "Lets think step by step"
+	- helps the model reason internally, especially for logical or mathematical tasks without interacting with external tools
+- A key method is the ReAct approach
+	- combines reasoning with acting
+	- allows model to think step-by-step and interleave actions (like using tools) between reasoning steps
+	- Solves complex tasks by:
+		- thought: internal reasoning
+		- Action: tool usage
+		- Observation: receiving tool output
 - 
