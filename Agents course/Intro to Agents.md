@@ -193,4 +193,45 @@ How do I use it ?<|im_end|>
 		- thought: internal reasoning
 		- Action: tool usage
 		- Observation: receiving tool output
-- 
+### Actions: Enabling the agent to Engage with its environment
+- Actions: are the concrete steps an AI agent takes to interact with its environment
+- stop and parse apprach
+	- Generation in a structure format
+		- agent outputs its intended action in a clear, predetermined format (JSON or code)
+	- Halting further generation
+		- once the text defining the action was emitted, LLM stops generating additional tokens, prevents extra outputs
+	- Parsing the ouput
+		- external parser reads the formatted action, determines which tool to call, and extracts the required parameters
+- An alternative approach is using Code Agents
+- Code agent generates an executable code block - typically in a high-level language like python
+	- Expressiveness: code can naturally represent complex logic, including loops, conditionals, and nested funcitons, providing greater flexibility than JSON
+	- Modularity and Reusability: Generated code can include functions and modules that are reusable across different actions or tasks
+	- Enhanced Debuggability: with a well-defined programming syntax, code errors are often easier to detect and correct
+	- Direct Integration: code agents can integrate directly with external libraries and APIs, enabling more complex operations such as data processing or real-time decision making
+- Keep in mind, executing LLM generated code may pose security riks
+	- prompt injection and execution of harmful code
+### Observe: Integrating feedback to Reflect and Adapt
+- Observations are how an agent perceives the consequences of its actions
+	- pvoide crucial info that fuels the agents thought process and guides future actions
+- they are signals from the environment that guide the next cycle of thought
+	- data from an API
+	- error messages
+	- system logs
+- Observation Phase
+	- Collects Feedback: receives data or confirmation that its actions was successful (or not)
+	- Appends Results: Integrates the new info into its existing context, effectively updating its memory
+	- Adapts its Strategy: uses this updated context to refine subsequent thoughts and actions
+- Iterative incorporation of feedback ensures that the agent remains dynamically aligned with its goals, constantly learning and adjusting based on real-world outcomes
+Types of Observations
+
+| Types              | Example                                                    |
+| ------------------ | ---------------------------------------------------------- |
+| System Feedback    | Error messages, success notifications, status code         |
+| Data Changes       | Database updates, file system modifications, state changes |
+| Environmental Data | Sensor readings, system metrics, resource usage            |
+| Response Analysis  | API responses, query results, computation outputs          |
+| Time-based events  | Deadlines reached, scheduled tasks completed               |
+- Results Appended
+	- Parse the action to identify the function(s) to call and the arguments(s) to use
+	- Execute the code
+	- Append the result as an Observation
